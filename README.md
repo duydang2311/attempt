@@ -8,6 +8,27 @@ To install the library:
 bun add @duydang2311/attempt
 ```
 
+## Usage
+
+Simply wrap functions that may throw exceptions inside `attemptSync` or `attemptAsync` to handle failures without try/catch blocks.
+
+```ts
+// wrap unsafe calls together
+const result = attempt.sync(() => {
+    const a = unsafeFunctionA();
+    const b = unsafeFunctionB(a);
+})(e => 'Either step 1 or 2 failed: ' + e);
+
+// or separate for finer control
+const step1 = attempt.sync(() => unsafeFunctionA())(e => 'Step 1 failed: ' + e);
+if (step1.failed) {
+    console.error(step1.error); // Step 1 failed: ...
+    return;
+}
+
+const step2 = attempt.sync(() => unsafeFunctionB(step1.data))(e => 'Step 2 failed: ' + e);
+```
+
 ## 📘 API
 
 This library provides a unified way to handle sync and async operations with explicit success/failure types using the `Attempt<TData, TError>` type.
