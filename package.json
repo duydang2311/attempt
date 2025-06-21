@@ -1,12 +1,12 @@
 {
     "name": "@duydang2311/attempt",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "Go-like error handling for JavaScript and TypeScript",
     "author": "duydang2311",
     "license": "MIT",
     "type": "module",
     "scripts": {
-        "build": "tsc -p tsconfig.json"
+        "build": "bun run build.ts"
     },
     "repository": {
         "type": "git",
@@ -23,7 +23,8 @@
         "url": "https://github.com/duydang2311/attempt/issues"
     },
     "homepage": "https://github.com/duydang2311/attempt#readme",
-    "main": "dist/index.js",
+    "main": "dist/index.cjs",
+    "module": "dist/index.js",
     "types": "dist/index.d.ts",
     "files": [
         "/dist"
@@ -31,12 +32,14 @@
     "exports": {
         ".": {
             "import": "./dist/index.js",
-            "types": "./dist/index.d.ts"
+            "types": "./dist/index.d.ts",
+            "require": "./dist/index.cjs"
         }
     },
     "devDependencies": {
         "@types/bun": "latest",
-        "agadoo": "^3.0.0"
+        "agadoo": "^3.0.0",
+        "bun-plugin-dts": "^0.3.0"
     },
     "peerDependencies": {
         "typescript": "^5"

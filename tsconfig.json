@@ -24,6 +24,8 @@
         "noUnusedLocals": false,
         "noUnusedParameters": false,
         "noPropertyAccessFromIndexSignature": false,
-    },
-    "include": ["lib/**/*"]
+        "esModuleInterop": true,
+        "noImplicitAny": true,
+        "noEmit": true
+    }
 }
