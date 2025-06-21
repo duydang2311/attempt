@@ -1,10 +1,13 @@
 {
     "name": "@duydang2311/attempt",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Go-like error handling for JavaScript and TypeScript",
     "author": "duydang2311",
     "license": "MIT",
     "type": "module",
+    "scripts": {
+        "build": "tsc -p tsconfig.json"
+    },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/duydang2311/attempt.git"
@@ -25,8 +28,11 @@
     "files": [
         "/dist"
     ],
-    "scripts": {
-        "build": "tsc -p tsconfig.json"
+    "exports": {
+        ".": {
+            "import": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        }
     },
     "devDependencies": {
         "@types/bun": "latest",
