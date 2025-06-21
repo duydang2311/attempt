@@ -1,0 +1,27 @@
+{
+    "name": "@duyda/attempt",
+    "version": "0.0.1",
+    "description": "Go-like error handling for JavaScript and TypeScript",
+    "author": "duydang2311",
+    "module": "index.ts",
+    "type": "module",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/duydang2311/attempt.git"
+    },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "/dist"
+    ],
+    "scripts": {
+        "build": "tsc -p tsconfig.json"
+    },
+    "devDependencies": {
+        "@types/bun": "latest",
+        "agadoo": "^3.0.0"
+    },
+    "peerDependencies": {
+        "typescript": "^5"
+    }
+}
