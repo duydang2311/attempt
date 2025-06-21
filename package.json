@@ -3,12 +3,23 @@
     "version": "0.0.1",
     "description": "Go-like error handling for JavaScript and TypeScript",
     "author": "duydang2311",
-    "module": "index.ts",
+    "license": "MIT",
     "type": "module",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/duydang2311/attempt.git"
     },
+    "keywords": [
+        "error-handling",
+        "go",
+        "try",
+        "try-catch",
+        "attempt"
+    ],
+    "bugs": {
+        "url": "https://github.com/duydang2311/attempt/issues"
+    },
+    "homepage": "https://github.com/duydang2311/attempt#readme",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "files": [
