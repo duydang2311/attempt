@@ -1,15 +1,98 @@
-# @duyda/attempt
+# @duydang2311/attempt
 
-To install dependencies:
+## Installation
 
-```bash
-bun install
-```
-
-To run:
+To install the library:
 
 ```bash
-bun run index.ts
+bun add @duydang2311/attempt
 ```
 
-This project was created using `bun init` in bun v1.2.16. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+## 📘 API
+
+This library provides a unified way to handle sync and async operations with explicit success/failure types using the `Attempt<TData, TError>` type.
+
+### `Attempt<TData, TError>`
+
+A discriminated union type representing the result of an operation:
+
+```ts
+type Attempt<TData, TError> =
+    | { ok: true; failed: false; data: TData }
+    | { ok: false; failed: true; error: TError };
+```
+
+You can use this type to handle success and failure cases explicitly without throwing exceptions.
+
+---
+
+### `attemptSync(fn)(mapException?)`
+
+Wraps a synchronous function in an `Attempt`. Optionally maps exceptions to a custom error.
+
+```ts
+const result = attemptSync(() => {
+    if (Math.random() < 0.5) throw new Error('Oops!');
+    return 'Success';
+})((e) => (e instanceof Error ? e.message : 'Unknown error'));
+// Attempt<string, string>
+```
+
+---
+
+### `attemptAsync(fn)(mapException?)`
+
+Wraps an async function (or any Promise-returning function) in an `Attempt`. Optionally maps exceptions to a custom error.
+
+```ts
+const result = attemptAsync(async () => {
+    const res = await fetch('/api');
+    if (!res.ok) throw new Error('Fetch failed');
+    return (await res.json()) as { hello: 'world' };
+})((e) => (e instanceof Error ? e.message : 'Unknown error'));
+// Promise<Attempt<{ hello: "world"; }, string>>
+```
+
+---
+
+### `attemptOk(data)`
+
+Creates a successful attempt.
+
+```ts
+const result = attemptOk('Hello');
+// Attempt<string, never>
+```
+
+---
+
+### `attemptFail(error)`
+
+Creates a failed attempt.
+
+```ts
+const result = attemptFail('Something went wrong');
+// Attempt<never, string>
+```
+
+---
+
+### `attempt`
+
+A convenient namespace-style object exposing all core helpers:
+
+```ts
+attempt.sync(fn)(mapException?)
+attempt.async(fn)(mapException?)
+attempt.ok(data)
+attempt.fail(error)
+```
+
+Use this for easier access or namespacing:
+
+```ts
+const result = attempt.sync(() => {
+    return 420;
+})();
+// Attempt<number, unknown>
+```
