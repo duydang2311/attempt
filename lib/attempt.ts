@@ -1,50 +1,48 @@
 const symbol = Symbol('attempt');
 
-export type Attempt<TData, TError> =
+export type Attempt<A, E> =
     | {
           readonly [symbol]: true;
           readonly ok: true;
           readonly failed: false;
-          readonly data: TData;
+          readonly data: A;
       }
     | {
           readonly [symbol]: true;
           readonly ok: false;
           readonly failed: true;
-          readonly error: TError;
+          readonly error: E;
       };
 
 interface AttemptAsyncFn {
-    <TData, TError>(fn: () => Promise<Attempt<TData, TError>>): <TError2>(
+    <A, E>(fn: () => Promise<Attempt<A, E>>): <TError2>(
         mapException?: (e: unknown) => TError2,
-    ) => Promise<Attempt<TData, TError | TError2>>;
-    <TData>(fn: () => Promise<TData>): <TError>(
-        mapException?: (e: unknown) => TError,
-    ) => Promise<Attempt<TData, TError>>;
+    ) => Promise<Attempt<A, E | TError2>>;
+    <A>(fn: () => Promise<A>): <E>(
+        mapException?: (e: unknown) => E,
+    ) => Promise<Attempt<A, E>>;
 }
 
-export const attemptSync = <TData>(fn: () => TData) => {
-    return <TError>(
-        mapException?: (e: unknown) => TError,
-    ): Attempt<TData, TError> => {
+export const attemptSync = <A>(fn: () => A) => {
+    return <E>(mapException?: (e: unknown) => E): Attempt<A, E> => {
         try {
             return attempt.ok(fn());
         } catch (e) {
-            return attempt.fail(mapException ? mapException(e) : (e as TError));
+            return attempt.fail(mapException ? mapException(e) : (e as E));
         }
     };
 };
 
-export const attemptAsync: AttemptAsyncFn = <TData, TError>(
-    fn: (() => Promise<TData>) | (() => Promise<Attempt<TData, TError>>),
+export const attemptAsync: AttemptAsyncFn = <A, E>(
+    fn: (() => Promise<A>) | (() => Promise<Attempt<A, E>>),
 ) => {
     return async <TError2>(
         mapException?: (e: unknown) => TError2,
-    ): Promise<Attempt<TData, TError | TError2>> => {
+    ): Promise<Attempt<A, E | TError2>> => {
         try {
             const ret = await fn();
             if (isAttempt(ret)) {
-                return ret as Attempt<TData, TError | TError2>;
+                return ret as Attempt<A, E | TError2>;
             }
             return attempt.ok(ret);
         } catch (e) {
@@ -55,27 +53,47 @@ export const attemptAsync: AttemptAsyncFn = <TData, TError>(
     };
 };
 
-export const attemptOk = <T>(data: T): Attempt<T, never> => ({
+export const attemptOk = <A>(data: A): Attempt<A, never> => ({
     [symbol]: true,
     ok: true,
     failed: false,
     data,
 });
 
-export const attemptFail = <T>(error: T): Attempt<never, T> => ({
+export const attemptFail = <E>(error: E): Attempt<never, E> => ({
     [symbol]: true,
     ok: false,
     failed: true,
     error,
 });
 
+export const attemptMap =
+    <A, E>(attempt: Attempt<A, E>) =>
+    <B>(f: (a: A) => B): Attempt<B, E> => {
+        if (attempt.ok) {
+            return attemptOk(f(attempt.data));
+        }
+        return attempt;
+    };
+
+export const attemptFlatMap =
+    <A, E>(attempt: Attempt<A, E>) =>
+    <A2, E2>(f: (a: A) => Attempt<A2, E2>): Attempt<A2, E | E2> => {
+        if (attempt.ok) {
+            return f(attempt.data);
+        }
+        return attemptFail(attempt.error);
+    };
+
 export const attempt = {
     sync: attemptSync,
     async: attemptAsync,
     ok: attemptOk,
     fail: attemptFail,
+    map: attemptMap,
+    flatMap: attemptFlatMap,
 };
 
-const isAttempt = <T, E>(value: any): value is Attempt<T, E> => {
+const isAttempt = <A, E>(value: any): value is Attempt<A, E> => {
     return typeof value === 'object' && value !== null && symbol in value;
 };
