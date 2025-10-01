@@ -4,13 +4,11 @@ const symbol = Symbol('attempt');
 
 export interface Ok<A> {
     readonly ok: true;
-    readonly failed: false;
     readonly data: A;
 }
 
 export interface Fail<E> {
     readonly ok: false;
-    readonly failed: true;
     readonly error: E;
 }
 
@@ -126,14 +124,12 @@ export const attemptAsync: AttemptAsyncFn = <A, E>(
 
 export const attemptOk = <A>(data: A): Attempt<A, never> => ({
     ok: true,
-    failed: false,
     data,
     pipe,
 });
 
 export const attemptFail = <E>(error: E): Attempt<never, E> => ({
     ok: false,
-    failed: true,
     error,
     pipe,
 });
@@ -150,7 +146,7 @@ export function attemptMap<A, E, A2>(
     return (
         attempt: Attempt<A, E>,
     ): Promise<Attempt<A2, E>> | Attempt<A2, E> => {
-        if (attempt.failed) {
+        if (!attempt.ok) {
             return attempt as Attempt<A2, E>;
         }
         const ret = f(attempt.data);
@@ -173,7 +169,7 @@ export function attemptFlatMap<A, A2, E2>(
     attempt: Attempt<A, E>,
 ) => Attempt<A2, E | E2> | Promise<Attempt<A2, E | E2>> {
     return <E>(attempt: Attempt<A, E>) => {
-        if (attempt.failed) {
+        if (!attempt.ok) {
             return attempt as Attempt<A2, E | E2>;
         }
         return f(attempt.data);
