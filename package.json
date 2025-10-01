@@ -1,7 +1,7 @@
 {
     "name": "@duydang2311/attempt",
-    "version": "0.0.11",
-    "description": "Go-like error handling for JavaScript and TypeScript",
+    "version": "0.1.0",
+    "description": "Functional Go-like error handling for JavaScript and TypeScript",
     "author": "duydang2311",
     "license": "MIT",
     "type": "module",
@@ -17,7 +17,8 @@
         "go",
         "try",
         "try-catch",
-        "attempt"
+        "attempt",
+        "functional"
     ],
     "bugs": {
         "url": "https://github.com/duydang2311/attempt/issues"
@@ -37,11 +38,14 @@
         }
     },
     "devDependencies": {
-        "@types/bun": "latest",
+        "@types/bun": "^1.2.23",
         "agadoo": "^3.0.0",
         "bun-plugin-dts": "^0.3.0"
     },
     "peerDependencies": {
-        "typescript": "^5"
+        "typescript": "^5.9.3"
+    },
+    "dependencies": {
+        "@bitty/pipe": "^0.4.0"
     }
 }
