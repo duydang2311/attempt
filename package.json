@@ -1,42 +1,13 @@
 {
     "name": "@duydang2311/attempt",
-    "version": "0.1.3",
-    "description": "Functional Go-like error handling for JavaScript and TypeScript",
+    "version": "0.1.4",
     "author": "duydang2311",
-    "license": "MIT",
-    "type": "module",
-    "scripts": {
-        "build": "bun run build.ts"
-    },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/duydang2311/attempt.git"
     },
-    "keywords": [
-        "error-handling",
-        "go",
-        "try",
-        "try-catch",
-        "attempt",
-        "functional"
-    ],
-    "bugs": {
-        "url": "https://github.com/duydang2311/attempt/issues"
-    },
-    "homepage": "https://github.com/duydang2311/attempt#readme",
     "main": "dist/index.cjs",
     "module": "dist/index.js",
-    "types": "dist/index.d.ts",
-    "files": [
-        "/dist"
-    ],
-    "exports": {
-        ".": {
-            "import": "./dist/index.js",
-            "types": "./dist/index.d.ts",
-            "require": "./dist/index.cjs"
-        }
-    },
     "devDependencies": {
         "@types/bun": "^1.2.23",
         "agadoo": "^3.0.0",
@@ -45,7 +16,35 @@
     "peerDependencies": {
         "typescript": "^5"
     },
-    "dependencies": {
-        "@bitty/pipe": "^0.4.0"
-    }
+    "exports": {
+        ".": {
+            "import": "./dist/index.js",
+            "types": "./dist/index.d.ts",
+            "require": "./dist/index.cjs"
+        }
+    },
+    "bugs": {
+        "url": "https://github.com/duydang2311/attempt/issues"
+    },
+    "description": "A functional type for error handling in JS/TS",
+    "files": [
+        "/dist"
+    ],
+    "homepage": "https://github.com/duydang2311/attempt#readme",
+    "keywords": [
+        "error-handling",
+        "try",
+        "try-catch",
+        "error",
+        "result",
+        "exception",
+        "attempt",
+        "functional"
+    ],
+    "license": "MIT",
+    "scripts": {
+        "build": "bun run build.ts"
+    },
+    "type": "module",
+    "types": "dist/index.d.ts"
 }
