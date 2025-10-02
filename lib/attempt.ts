@@ -1,4 +1,4 @@
-import __pipe from '@bitty/pipe';
+import { pipe, type PipeFn, type PipeReturnType } from './pipe';
 
 const symbol = Symbol('attempt');
 
@@ -13,86 +13,81 @@ export interface Fail<E> {
 }
 
 export type Attempt<A, E> = (Ok<A> | Fail<E>) & {
-    pipe<T1>(...fns: [(a: Attempt<A, E>) => T1]): T1;
-    pipe<T1, T2>(...fns: [(a: Attempt<A, E>) => T1, (a: T1) => T2]): T2;
-    pipe<T1, T2, T3>(
-        ...fns: [(a: Attempt<A, E>) => T1, (a: T1) => T2, (a: T2) => T3]
-    ): T3;
-    pipe<T1, T2, T3, T4>(
-        ...fns: [
-            (a: Attempt<A, E>) => T1,
-            (a: T1) => T2,
-            (a: T2) => T3,
-            (a: T3) => T4,
-        ]
-    ): T4;
-    pipe<T1, T2, T3, T4, T5>(
-        ...fns: [
-            (a: Attempt<A, E>) => T1,
-            (a: T1) => T2,
-            (a: T2) => T3,
-            (a: T3) => T4,
-            (a: T4) => T5,
-        ]
-    ): T5;
-    pipe<T1, T2, T3, T4, T5, T6>(
-        ...fns: [
-            (a: Attempt<A, E>) => T1,
-            (a: T1) => T2,
-            (a: T2) => T3,
-            (a: T3) => T4,
-            (a: T4) => T5,
-            (a: T5) => T6,
-        ]
-    ): T6;
-    pipe<T1, T2, T3, T4, T5, T6, T7>(
-        ...fns: [
-            (a: Attempt<A, E>) => T1,
-            (a: T1) => T2,
-            (a: T2) => T3,
-            (a: T3) => T4,
-            (a: T4) => T5,
-            (a: T5) => T6,
-            (a: T6) => T7,
-        ]
-    ): T7;
-    pipe<T1, T2, T3, T4, T5, T6, T7, T8>(
-        ...fns: [
-            (a: Attempt<A, E>) => T1,
-            (a: T1) => T2,
-            (a: T2) => T3,
-            (a: T3) => T4,
-            (a: T4) => T5,
-            (a: T5) => T6,
-            (a: T6) => T7,
-            (a: T7) => T8,
-        ]
-    ): T8;
-    pipe<T1, T2, T3, T4, T5, T6, T7, T8, T9>(
-        ...fns: [
-            (a: Attempt<A, E>) => T1,
-            (a: T1) => T2,
-            (a: T2) => T3,
-            (a: T3) => T4,
-            (a: T4) => T5,
-            (a: T5) => T6,
-            (a: T6) => T7,
-            (a: T7) => T8,
-            (a: T8) => T9,
-        ]
-    ): T9;
+    pipe<T extends Attempt<A, E>, R1>(
+        this: T,
+        fn1: PipeFn<T, R1>,
+    ): PipeReturnType<[R1]>;
+    pipe<T extends Attempt<A, E>, R1, R2>(
+        this: T,
+        fn1: PipeFn<T, R1>,
+        fn2: PipeFn<Awaited<R1>, R2>,
+    ): PipeReturnType<[R1, R2]>;
+    pipe<T extends Attempt<A, E>, R1, R2, R3>(
+        this: T,
+        fn1: PipeFn<T, R1>,
+        fn2: PipeFn<Awaited<R1>, R2>,
+        fn3: PipeFn<Awaited<R2>, R3>,
+    ): PipeReturnType<[R1, R2, R3]>;
+    pipe<T extends Attempt<A, E>, R1, R2, R3, R4>(
+        this: T,
+        fn1: PipeFn<T, R1>,
+        fn2: PipeFn<Awaited<R1>, R2>,
+        fn3: PipeFn<Awaited<R2>, R3>,
+        fn4: PipeFn<Awaited<R3>, R4>,
+    ): PipeReturnType<[R1, R2, R3, R4]>;
+    pipe<T extends Attempt<A, E>, R1, R2, R3, R4, R5>(
+        this: T,
+        fn1: PipeFn<T, R1>,
+        fn2: PipeFn<Awaited<R1>, R2>,
+        fn3: PipeFn<Awaited<R2>, R3>,
+        fn4: PipeFn<Awaited<R3>, R4>,
+        fn5: PipeFn<Awaited<R4>, R5>,
+    ): PipeReturnType<[R1, R2, R3, R4, R5]>;
+    pipe<T extends Attempt<A, E>, R1, R2, R3, R4, R5, R6>(
+        this: T,
+        fn1: PipeFn<T, R1>,
+        fn2: PipeFn<Awaited<R1>, R2>,
+        fn3: PipeFn<Awaited<R2>, R3>,
+        fn4: PipeFn<Awaited<R3>, R4>,
+        fn5: PipeFn<Awaited<R4>, R5>,
+        fn6: PipeFn<Awaited<R5>, R6>,
+    ): PipeReturnType<[R1, R2, R3, R4, R5, R6]>;
+    pipe<T extends Attempt<A, E>, R1, R2, R3, R4, R5, R6, R7>(
+        this: T,
+        fn1: PipeFn<T, R1>,
+        fn2: PipeFn<Awaited<R1>, R2>,
+        fn3: PipeFn<Awaited<R2>, R3>,
+        fn4: PipeFn<Awaited<R3>, R4>,
+        fn5: PipeFn<Awaited<R4>, R5>,
+        fn6: PipeFn<Awaited<R5>, R6>,
+        fn7: PipeFn<Awaited<R6>, R7>,
+    ): PipeReturnType<[R1, R2, R3, R4, R5, R6, R7]>;
+    pipe<T extends Attempt<A, E>, R1, R2, R3, R4, R5, R6, R7, R8>(
+        this: T,
+        fn1: PipeFn<T, R1>,
+        fn2: PipeFn<Awaited<R1>, R2>,
+        fn3: PipeFn<Awaited<R2>, R3>,
+        fn4: PipeFn<Awaited<R3>, R4>,
+        fn5: PipeFn<Awaited<R4>, R5>,
+        fn6: PipeFn<Awaited<R5>, R6>,
+        fn7: PipeFn<Awaited<R6>, R7>,
+        fn8: PipeFn<Awaited<R7>, R8>,
+    ): PipeReturnType<[R1, R2, R3, R4, R5, R6, R7, R8]>;
+    pipe<T extends Attempt<A, E>, R1, R2, R3, R4, R5, R6, R7, R8, R9>(
+        this: T,
+        fn1: PipeFn<T, R1>,
+        fn2: PipeFn<Awaited<R1>, R2>,
+        fn3: PipeFn<Awaited<R2>, R3>,
+        fn4: PipeFn<Awaited<R3>, R4>,
+        fn5: PipeFn<Awaited<R4>, R5>,
+        fn6: PipeFn<Awaited<R5>, R6>,
+        fn7: PipeFn<Awaited<R6>, R7>,
+        fn8: PipeFn<Awaited<R7>, R8>,
+        fn9: PipeFn<Awaited<R8>, R9>,
+    ): PipeReturnType<[R1, R2, R3, R4, R5, R6, R7, R8, R9]>;
 };
 
-interface AttemptAsyncFn {
-    <A, E>(fn: () => Promise<Attempt<A, E>>): <TError2>(
-        mapException?: (e: unknown) => TError2,
-    ) => Promise<Attempt<A, E | TError2>>;
-    <A>(fn: () => Promise<A>): <E>(
-        mapException?: (e: unknown) => E,
-    ) => Promise<Attempt<A, E>>;
-}
-
-export const attemptSync = <A>(fn: () => A) => {
+export function attemptSync<A>(fn: () => A) {
     return <E>(mapException?: (e: unknown) => E): Attempt<A, E> => {
         try {
             return attempt.ok(fn());
@@ -100,11 +95,19 @@ export const attemptSync = <A>(fn: () => A) => {
             return attempt.fail(mapException ? mapException(e) : (e as E));
         }
     };
-};
+}
 
-export const attemptAsync: AttemptAsyncFn = <A, E>(
+export function attemptAsync<A, E>(
+    fn: () => Promise<Attempt<A, E>>,
+): <TError2>(
+    mapException?: (e: unknown) => TError2,
+) => Promise<Attempt<A, E | TError2>>;
+export function attemptAsync<A>(
+    fn: () => Promise<A>,
+): <E>(mapException?: (e: unknown) => E) => Promise<Attempt<A, E>>;
+export function attemptAsync<A, E>(
     fn: (() => Promise<A>) | (() => Promise<Attempt<A, E>>),
-) => {
+) {
     return async <TError2>(
         mapException?: (e: unknown) => TError2,
     ): Promise<Attempt<A, E | TError2>> => {
@@ -120,19 +123,23 @@ export const attemptAsync: AttemptAsyncFn = <A, E>(
             );
         }
     };
-};
+}
 
-export const attemptOk = <A>(data: A): Attempt<A, never> => ({
-    ok: true,
-    data,
-    pipe,
-});
+export function attemptOk<A>(data: A): Attempt<A, never> {
+    return {
+        ok: true,
+        data,
+        pipe: attemptPipe,
+    };
+}
 
-export const attemptFail = <E>(error: E): Attempt<never, E> => ({
-    ok: false,
-    error,
-    pipe,
-});
+export function attemptFail<E>(error: E): Attempt<never, E> {
+    return {
+        ok: false,
+        error,
+        pipe: attemptPipe,
+    };
+}
 
 export function attemptMap<A, E, A2>(
     f: (a: A) => Promise<A2>,
@@ -189,6 +196,75 @@ const isAttempt = <A, E>(value: any): value is Attempt<A, E> => {
     return typeof value === 'object' && value !== null && symbol in value;
 };
 
-function pipe(this: unknown, ...fns: Function[]) {
-    return __pipe(() => this, ...(fns as []))();
+function attemptPipe<T, R1>(this: T, fn1: PipeFn<T, R1>): PipeReturnType<[R1]>;
+function attemptPipe<T, R1, R2>(
+    this: T,
+    fn1: PipeFn<T, R1>,
+    fn2: PipeFn<Awaited<R1>, R2>,
+): PipeReturnType<[R1, R2]>;
+function attemptPipe<T, R1, R2, R3>(
+    this: T,
+    fn1: PipeFn<T, R1>,
+    fn2: PipeFn<Awaited<R1>, R2>,
+    fn3: PipeFn<Awaited<R2>, R3>,
+): PipeReturnType<[R1, R2, R3]>;
+function attemptPipe<T, R1, R2, R3, R4>(
+    this: T,
+    fn1: PipeFn<T, R1>,
+    fn2: PipeFn<Awaited<R1>, R2>,
+    fn3: PipeFn<Awaited<R2>, R3>,
+    fn4: PipeFn<Awaited<R3>, R4>,
+): PipeReturnType<[R1, R2, R3, R4]>;
+function attemptPipe<T, R1, R2, R3, R4, R5>(
+    this: T,
+    fn1: PipeFn<T, R1>,
+    fn2: PipeFn<Awaited<R1>, R2>,
+    fn3: PipeFn<Awaited<R2>, R3>,
+    fn4: PipeFn<Awaited<R3>, R4>,
+    fn5: PipeFn<Awaited<R4>, R5>,
+): PipeReturnType<[R1, R2, R3, R4, R5]>;
+function attemptPipe<T, R1, R2, R3, R4, R5, R6>(
+    this: T,
+    fn1: PipeFn<T, R1>,
+    fn2: PipeFn<Awaited<R1>, R2>,
+    fn3: PipeFn<Awaited<R2>, R3>,
+    fn4: PipeFn<Awaited<R3>, R4>,
+    fn5: PipeFn<Awaited<R4>, R5>,
+    fn6: PipeFn<Awaited<R5>, R6>,
+): PipeReturnType<[R1, R2, R3, R4, R5, R6]>;
+function attemptPipe<T, R1, R2, R3, R4, R5, R6, R7>(
+    this: T,
+    fn1: PipeFn<T, R1>,
+    fn2: PipeFn<Awaited<R1>, R2>,
+    fn3: PipeFn<Awaited<R2>, R3>,
+    fn4: PipeFn<Awaited<R3>, R4>,
+    fn5: PipeFn<Awaited<R4>, R5>,
+    fn6: PipeFn<Awaited<R5>, R6>,
+    fn7: PipeFn<Awaited<R6>, R7>,
+): PipeReturnType<[R1, R2, R3, R4, R5, R6, R7]>;
+function attemptPipe<T, R1, R2, R3, R4, R5, R6, R7, R8>(
+    this: T,
+    fn1: PipeFn<T, R1>,
+    fn2: PipeFn<Awaited<R1>, R2>,
+    fn3: PipeFn<Awaited<R2>, R3>,
+    fn4: PipeFn<Awaited<R3>, R4>,
+    fn5: PipeFn<Awaited<R4>, R5>,
+    fn6: PipeFn<Awaited<R5>, R6>,
+    fn7: PipeFn<Awaited<R6>, R7>,
+    fn8: PipeFn<Awaited<R7>, R8>,
+): PipeReturnType<[R1, R2, R3, R4, R5, R6, R7, R8]>;
+function attemptPipe<T, R1, R2, R3, R4, R5, R6, R7, R8, R9>(
+    this: T,
+    fn1: PipeFn<T, R1>,
+    fn2: PipeFn<Awaited<R1>, R2>,
+    fn3: PipeFn<Awaited<R2>, R3>,
+    fn4: PipeFn<Awaited<R3>, R4>,
+    fn5: PipeFn<Awaited<R4>, R5>,
+    fn6: PipeFn<Awaited<R5>, R6>,
+    fn7: PipeFn<Awaited<R6>, R7>,
+    fn8: PipeFn<Awaited<R7>, R8>,
+    fn9: PipeFn<Awaited<R8>, R9>,
+): PipeReturnType<[R1, R2, R3, R4, R5, R6, R7, R8, R9]>;
+function attemptPipe(this: unknown, ...fns: PipeFn<unknown, unknown>[]) {
+    return pipe(this, ...fns);
 }
