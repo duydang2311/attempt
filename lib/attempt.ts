@@ -91,12 +91,12 @@ export function attemptFail<E>(error: E): Attempt<never, E> {
     };
 }
 
-export function attemptMap<A, E, A2>(
-    f: (a: A) => Promise<A2>,
-): (attempt: Attempt<A, E>) => Promise<Attempt<A2, E>>;
-export function attemptMap<A, E, A2>(
-    f: (a: A) => A2,
-): (attempt: Attempt<A, E>) => Attempt<A2, E>;
+export function attemptMap<T extends Attempt, A>(
+    f: (a: InferOk<T>) => A,
+): (attempt: T) => Promise<Attempt<A, InferFail<T>>>;
+export function attemptMap<T extends Attempt, A>(
+    f: (a: InferOk<T>) => A,
+): (attempt: T) => Attempt<A, InferFail<T>>;
 export function attemptMap<A, E, A2>(
     f: (a: A) => Promise<A2> | A2,
 ): (attempt: Attempt<A, E>) => Promise<Attempt<A2, E>> | Attempt<A2, E> {
