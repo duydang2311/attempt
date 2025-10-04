@@ -1,5 +1,9 @@
 import { pipe, type PipeFn, type PipeReturnType } from './pipe';
 
+export type InferOk<T> = T extends Ok<infer A> ? A : never;
+
+export type InferFail<T> = T extends Fail<infer E> ? E : never;
+
 export interface Ok<A> {
     readonly ok: true;
     readonly data: A;
@@ -10,28 +14,30 @@ export interface Fail<E> {
     readonly error: E;
 }
 
-export interface AttemptApi<A, E> {
+export interface AttemptApi {
     // prettier-ignore
-    pipe<T extends Attempt<A, E>, R1>(this: T, fn1: PipeFn<T, R1>): PipeReturnType<[R1]>;
+    pipe<T>(this: T): T;
     // prettier-ignore
-    pipe<T extends Attempt<A, E>, R1, R2>(this: T, fn1: PipeFn<T, R1>, fn2: PipeFn<Awaited<R1>, R2>): PipeReturnType<[R1, R2]>;
+    pipe<T, R1 = never>(this: T, fn1: PipeFn<T, R1>): PipeReturnType<[R1]>;
     // prettier-ignore
-    pipe<T extends Attempt<A, E>, R1, R2, R3>(this: T, fn1: PipeFn<T, R1>, fn2: PipeFn<Awaited<R1>, R2>, fn3: PipeFn<Awaited<R2>, R3>): PipeReturnType<[R1, R2, R3]>;
+    pipe<T, R1, R2 = never>(this: T, fn1: PipeFn<T, R1>, fn2: PipeFn<Awaited<R1>, R2>): PipeReturnType<[R1, R2]>;
     // prettier-ignore
-    pipe<T extends Attempt<A, E>, R1, R2, R3, R4>(this: T, fn1: PipeFn<T, R1>, fn2: PipeFn<Awaited<R1>, R2>, fn3: PipeFn<Awaited<R2>, R3>, fn4: PipeFn<Awaited<R3>, R4>): PipeReturnType<[R1, R2, R3, R4]>;
+    pipe<T, R1, R2, R3 = never>(this: T, fn1: PipeFn<T, R1>, fn2: PipeFn<Awaited<R1>, R2>, fn3: PipeFn<Awaited<R2>, R3>): PipeReturnType<[R1, R2, R3]>;
     // prettier-ignore
-    pipe<T extends Attempt<A, E>, R1, R2, R3, R4, R5>(this: T, fn1: PipeFn<T, R1>, fn2: PipeFn<Awaited<R1>, R2>, fn3: PipeFn<Awaited<R2>, R3>, fn4: PipeFn<Awaited<R3>, R4>, fn5: PipeFn<Awaited<R4>, R5>): PipeReturnType<[R1, R2, R3, R4, R5]>;
+    pipe<T, R1, R2, R3, R4 = never>(this: T, fn1: PipeFn<T, R1>, fn2: PipeFn<Awaited<R1>, R2>, fn3: PipeFn<Awaited<R2>, R3>, fn4: PipeFn<Awaited<R3>, R4>): PipeReturnType<[R1, R2, R3, R4]>;
     // prettier-ignore
-    pipe<T extends Attempt<A, E>, R1, R2, R3, R4, R5, R6>(this: T, fn1: PipeFn<T, R1>, fn2: PipeFn<Awaited<R1>, R2>, fn3: PipeFn<Awaited<R2>, R3>, fn4: PipeFn<Awaited<R3>, R4>, fn5: PipeFn<Awaited<R4>, R5>, fn6: PipeFn<Awaited<R5>, R6>): PipeReturnType<[R1, R2, R3, R4, R5, R6]>;
+    pipe<T, R1, R2, R3, R4, R5 = never>(this: T, fn1: PipeFn<T, R1>, fn2: PipeFn<Awaited<R1>, R2>, fn3: PipeFn<Awaited<R2>, R3>, fn4: PipeFn<Awaited<R3>, R4>, fn5: PipeFn<Awaited<R4>, R5>): PipeReturnType<[R1, R2, R3, R4, R5]>;
     // prettier-ignore
-    pipe<T extends Attempt<A, E>, R1, R2, R3, R4, R5, R6, R7>(this: T, fn1: PipeFn<T, R1>, fn2: PipeFn<Awaited<R1>, R2>, fn3: PipeFn<Awaited<R2>, R3>, fn4: PipeFn<Awaited<R3>, R4>, fn5: PipeFn<Awaited<R4>, R5>, fn6: PipeFn<Awaited<R5>, R6>, fn7: PipeFn<Awaited<R6>, R7>): PipeReturnType<[R1, R2, R3, R4, R5, R6, R7]>;
+    pipe<T, R1, R2, R3, R4, R5, R6 = never>(this: T, fn1: PipeFn<T, R1>, fn2: PipeFn<Awaited<R1>, R2>, fn3: PipeFn<Awaited<R2>, R3>, fn4: PipeFn<Awaited<R3>, R4>, fn5: PipeFn<Awaited<R4>, R5>, fn6: PipeFn<Awaited<R5>, R6>): PipeReturnType<[R1, R2, R3, R4, R5, R6]>;
     // prettier-ignore
-    pipe<T extends Attempt<A, E>, R1, R2, R3, R4, R5, R6, R7, R8>(this: T, fn1: PipeFn<T, R1>, fn2: PipeFn<Awaited<R1>, R2>, fn3: PipeFn<Awaited<R2>, R3>, fn4: PipeFn<Awaited<R3>, R4>, fn5: PipeFn<Awaited<R4>, R5>, fn6: PipeFn<Awaited<R5>, R6>, fn7: PipeFn<Awaited<R6>, R7>, fn8: PipeFn<Awaited<R7>, R8>): PipeReturnType<[R1, R2, R3, R4, R5, R6, R7, R8]>;
+    pipe<T, R1, R2, R3, R4, R5, R6, R7 = never>(this: T, fn1: PipeFn<T, R1>, fn2: PipeFn<Awaited<R1>, R2>, fn3: PipeFn<Awaited<R2>, R3>, fn4: PipeFn<Awaited<R3>, R4>, fn5: PipeFn<Awaited<R4>, R5>, fn6: PipeFn<Awaited<R5>, R6>, fn7: PipeFn<Awaited<R6>, R7>): PipeReturnType<[R1, R2, R3, R4, R5, R6, R7]>;
     // prettier-ignore
-    pipe<T extends Attempt<A, E>, R1, R2, R3, R4, R5, R6, R7, R8, R9>(this: T, fn1: PipeFn<T, R1>, fn2: PipeFn<Awaited<R1>, R2>, fn3: PipeFn<Awaited<R2>, R3>, fn4: PipeFn<Awaited<R3>, R4>, fn5: PipeFn<Awaited<R4>, R5>, fn6: PipeFn<Awaited<R5>, R6>, fn7: PipeFn<Awaited<R6>, R7>, fn8: PipeFn<Awaited<R7>, R8>, fn9: PipeFn<Awaited<R8>, R9>): PipeReturnType<[R1, R2, R3, R4, R5, R6, R7, R8, R9]>;
+    pipe<T, R1, R2, R3, R4, R5, R6, R7, R8 = never>(this: T, fn1: PipeFn<T, R1>, fn2: PipeFn<Awaited<R1>, R2>, fn3: PipeFn<Awaited<R2>, R3>, fn4: PipeFn<Awaited<R3>, R4>, fn5: PipeFn<Awaited<R4>, R5>, fn6: PipeFn<Awaited<R5>, R6>, fn7: PipeFn<Awaited<R6>, R7>, fn8: PipeFn<Awaited<R7>, R8>): PipeReturnType<[R1, R2, R3, R4, R5, R6, R7, R8]>;
+    // prettier-ignore
+    pipe<T, R1, R2, R3, R4, R5, R6, R7, R8, R9 = never>(this: T, fn1: PipeFn<T, R1>, fn2: PipeFn<Awaited<R1>, R2>, fn3: PipeFn<Awaited<R2>, R3>, fn4: PipeFn<Awaited<R3>, R4>, fn5: PipeFn<Awaited<R4>, R5>, fn6: PipeFn<Awaited<R5>, R6>, fn7: PipeFn<Awaited<R6>, R7>, fn8: PipeFn<Awaited<R7>, R8>, fn9: PipeFn<Awaited<R8>, R9>): PipeReturnType<[R1, R2, R3, R4, R5, R6, R7, R8, R9]>;
 }
 
-export type Attempt<A, E> = (Ok<A> | Fail<E>) & AttemptApi<A, E>;
+export type Attempt<A = unknown, E = unknown> = (Ok<A> | Fail<E>) & AttemptApi;
 
 export function attemptSync<A>(fn: () => A) {
     return <E>(mapException?: (e: unknown) => E): Attempt<A, E> => {
@@ -108,22 +114,20 @@ export function attemptMap<A, E, A2>(
     };
 }
 
-export function attemptFlatMap<A, A2, E2>(
-    f: (a: A) => Promise<Attempt<A2, E2>>,
-): <E>(attempt: Attempt<A, E>) => Promise<Attempt<A2, E | E2>>;
-export function attemptFlatMap<A, A2, E2>(
-    f: (a: A) => Attempt<A2, E2>,
-): <E>(attempt: Attempt<A, E>) => Attempt<A2, E | E2>;
-export function attemptFlatMap<A, A2, E2>(
-    f: (a: A) => Attempt<A2, E2> | Promise<Attempt<A2, E2>>,
-): <E>(
-    attempt: Attempt<A, E>,
-) => Attempt<A2, E | E2> | Promise<Attempt<A2, E | E2>> {
-    return <E>(attempt: Attempt<A, E>) => {
+export function attemptFlatMap<T extends Attempt, T1 extends Attempt>(
+    f: (a: InferOk<T>) => Promise<T1>,
+): (attempt: T) => Promise<Attempt<InferOk<T1>, InferFail<T> | InferFail<T1>>>;
+export function attemptFlatMap<T extends Attempt, T1 extends Attempt>(
+    f: (a: InferOk<T>) => T1,
+): (attempt: T) => Attempt<InferOk<T1>, InferFail<T> | InferFail<T1>>;
+export function attemptFlatMap<T extends Attempt, T1 extends Attempt>(
+    f: (a: InferOk<T>) => T1 | Promise<T1>,
+) {
+    return (attempt: T) => {
         if (!attempt.ok) {
-            return attempt as Attempt<A2, E | E2>;
+            return attempt;
         }
-        return f(attempt.data);
+        return f(attempt.data as InferOk<T>);
     };
 }
 
@@ -148,6 +152,8 @@ export const attempt = {
     check: isAttempt,
 } as const;
 
+// prettier-ignore
+function attemptPipe<T>(this: T): T;
 // prettier-ignore
 function attemptPipe<T, R1>(this: T, fn1: PipeFn<T, R1>): PipeReturnType<[R1]>;
 // prettier-ignore
