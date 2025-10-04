@@ -2,17 +2,17 @@ import { pipe, type PipeFn, type PipeReturnType } from './pipe';
 
 const symbol = Symbol('attempt');
 
-export interface Ok<A> {
+export interface Ok<A, E> extends AttemptApi<A, E> {
     readonly ok: true;
     readonly data: A;
 }
 
-export interface Fail<E> {
+export interface Fail<A, E> extends AttemptApi<A, E> {
     readonly ok: false;
     readonly error: E;
 }
 
-export type Attempt<A, E> = (Ok<A> | Fail<E>) & {
+export interface AttemptApi<A, E> {
     pipe<T extends Attempt<A, E>, R1>(
         this: T,
         fn1: PipeFn<T, R1>,
@@ -85,7 +85,9 @@ export type Attempt<A, E> = (Ok<A> | Fail<E>) & {
         fn8: PipeFn<Awaited<R7>, R8>,
         fn9: PipeFn<Awaited<R8>, R9>,
     ): PipeReturnType<[R1, R2, R3, R4, R5, R6, R7, R8, R9]>;
-};
+}
+
+export type Attempt<A, E> = Ok<A, E> | Fail<A, E>;
 
 export function attemptSync<A>(fn: () => A) {
     return <E>(mapException?: (e: unknown) => E): Attempt<A, E> => {
