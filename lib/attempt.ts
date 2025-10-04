@@ -131,6 +131,44 @@ export function attemptFlatMap<T extends Attempt, T1 extends Attempt>(
     };
 }
 
+export function attemptMapError<T extends Attempt, E>(
+    f: (e: InferFail<T>) => Promise<E>,
+): (attempt: T) => Promise<Attempt<InferOk<T>, E>>;
+export function attemptMapError<T extends Attempt, E>(
+    f: (e: InferFail<T>) => E,
+): (attempt: T) => Attempt<InferOk<T>, E>;
+export function attemptMapError<T extends Attempt, E>(
+    f: (e: InferFail<T>) => Promise<E> | E,
+): unknown {
+    return (attempt: T) => {
+        if (attempt.ok) {
+            return attempt;
+        }
+        const ret = f(attempt.error as InferFail<T>);
+        if (ret instanceof Promise) {
+            return ret.then(attemptFail);
+        }
+        return attemptFail(ret);
+    };
+}
+
+export function attemptFlatMapError<T extends Attempt, T1 extends Attempt>(
+    f: (e: InferFail<T>) => Promise<T1>,
+): (attempt: T) => Promise<Attempt<InferOk<T> | InferOk<T1>, InferFail<T1>>>;
+export function attemptFlatMapError<T extends Attempt, T1 extends Attempt>(
+    f: (e: InferFail<T>) => T1,
+): (attempt: T) => Attempt<InferOk<T> | InferOk<T1>, InferFail<T1>>;
+export function attemptFlatMapError<T extends Attempt, T1 extends Attempt>(
+    f: (e: InferFail<T>) => T1 | Promise<T1>,
+): unknown {
+    return (attempt: T) => {
+        if (attempt.ok) {
+            return attempt;
+        }
+        return f(attempt.error as InferFail<T>);
+    };
+}
+
 export function isAttempt<A, E>(obj: unknown): obj is Attempt<A, E> {
     return (
         typeof obj === 'object' &&
@@ -150,6 +188,9 @@ export const attempt = {
     map: attemptMap,
     flatMap: attemptFlatMap,
     check: isAttempt,
+    mapError: attemptMapError,
+    flatMapError: attemptFlatMapError,
+    orElse: attemptFlatMapError,
 } as const;
 
 // prettier-ignore
