@@ -169,6 +169,59 @@ export function attemptFlatMapError<T extends Attempt, T1 extends Attempt>(
     };
 }
 
+export function attemptUnwrap<T extends Attempt>(attempt: T): InferOk<T> {
+    if (!attempt.ok) {
+        throw attempt.error;
+    }
+    return attempt.data as InferOk<T>;
+}
+
+export function attemptUnwrapOr<T extends Attempt>(
+    attempt: T,
+    defaultValue: InferOk<T>,
+): InferOk<T>;
+export function attemptUnwrapOr<T extends Attempt>(
+    defaultValue: InferOk<T>,
+): (attempt: T) => InferOk<T>;
+export function attemptUnwrapOr<T extends Attempt>(
+    attemptOrDefault: T | InferOk<T>,
+    defaultValue?: unknown,
+) {
+    if (defaultValue) {
+        const attempt = attemptOrDefault as T;
+        return attempt.ok ? (attempt.data as InferOk<T>) : defaultValue;
+    }
+    return (attempt: T) =>
+        attempt.ok
+            ? (attempt.data as InferOk<T>)
+            : (attemptOrDefault as InferOk<T>);
+}
+
+export function attemptUnwrapOrElse<T extends Attempt>(
+    attempt: T,
+    f: (error: InferFail<T>) => InferOk<T>,
+): InferOk<T>;
+export function attemptUnwrapOrElse<T extends Attempt>(
+    f: (error: InferFail<T>) => InferOk<T>,
+): (attempt: T) => InferOk<T>;
+export function attemptUnwrapOrElse<T extends Attempt>(
+    attemptOrF: T | ((error: InferFail<T>) => InferOk<T>),
+    f?: (error: InferFail<T>) => InferOk<T>,
+) {
+    if (f) {
+        const attempt = attemptOrF as T;
+        return attempt.ok
+            ? (attempt.data as InferOk<T>)
+            : f(attempt.error as InferFail<T>);
+    }
+    return (attempt: T) =>
+        attempt.ok
+            ? (attempt.data as InferOk<T>)
+            : (attemptOrF as (error: InferFail<T>) => InferOk<T>)(
+                  attempt.error as InferFail<T>,
+              );
+}
+
 export function isAttempt<A, E>(obj: unknown): obj is Attempt<A, E> {
     return (
         typeof obj === 'object' &&
@@ -191,6 +244,9 @@ export const attempt = {
     mapError: attemptMapError,
     flatMapError: attemptFlatMapError,
     orElse: attemptFlatMapError,
+    uwnrap: attemptUnwrap,
+    unwrapOr: attemptUnwrapOr,
+    unwrapOrElse: attemptUnwrapOrElse,
 } as const;
 
 // prettier-ignore
