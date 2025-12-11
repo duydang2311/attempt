@@ -1,10 +1,10 @@
 # @duydang2311/attempt
 
-A functional type to deal with error-handling in JS/TS. It is no different than the Either type you've known from functional-programming, or the Result type you've heard in Rust.
+[![@duydang2311/attempt's badge](https://deno.bundlejs.com/?q=@duydang2311/attempt&badge=detailed&badge-style=for-the-badge)](https://bundlejs.com/?q=@duydang2311/attempt)
+
+Functional error handling for JavaScript and TypeScript. Inspired by "Error as Value" in functional programming, `attempt` provides a clean, predictable way to manage operations that can succeed or fail.
 
 ## Installation
-
-To install the library:
 
 ```bash
 bun add @duydang2311/attempt
@@ -12,10 +12,35 @@ bun add @duydang2311/attempt
 
 ## Usage
 
-See a comparison between how you would handle errors using exception and the `Attempt` type.
+```typescript
+import { attempt } from '@duydang2311/attempt';
 
-![Using exception](./assets/use_exception.png 'Example: using exception')
-_Example: Error handling with exception._
+const divideUnsafe = (a: number, b: number) => {
+    if (b === 0) { throw new Error("Can't divide by zero!"); }
+    return a / b;
+};
 
-![Using attempt](./assets/use_attempt.png 'Example: using attempt')
-_Example: Error handling with `Attempt`._
+const divideSafe = (a: number, b: number) => {
+    if (b === 0) { return attempt.fail('ERR_DIVIDE_BY_ZERO'); }
+    return attempt.ok(a / b);
+};
+
+const resultUnsafe = divide(10, 2); // number (might throw)
+const resultSafe = attempt.sync(() => divide(10, 2))(); // Attempt<number, unknown>
+
+// assume divide by zero is the only exception that might happen
+const resultSafeBetter = attempt.sync(() => divide(10, 2))(e => 'ERR_DIVIDE_BY_ZERO'); // Attempt<number, 'ERR_DIVIDE_BY_ZERO'>
+
+const resultSafeEvenBetter = divideSafe(10, 2); // Attempt<number, 'ERR_DIVIDE_BY_ZERO'>
+
+// Do some operations the functional way
+const output = resultSafeEvenBetter.pipe(
+    attempt.map(a => `Success: ${a}`),
+    attempt.unwrapOrElse(e => `Error: ${e}`)
+); // string
+
+console.log(output);
+```
+
+## License
+MIT License. See [LICENSE](LICENSE) for details.
