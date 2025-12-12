@@ -25,15 +25,15 @@ const divideSafe = (a: number, b: number) => {
     return attempt.ok(a / b);
 };
 
-const resultUnsafe = divide(10, 2); // number (might throw)
-const resultSafe = attempt.sync(() => divide(10, 2))(); // Attempt<number, unknown>
+const resultUnsafe = divideUnsafe(10, 2); // number (might throw)
+const resultSafe = attempt.sync(() => divideUnsafe(10, 2))(); // Attempt<number, unknown>
 
-// assume divide by zero is the only exception that might happen
-const resultSafeBetter = attempt.sync(() => divide(10, 2))(e => 'ERR_DIVIDE_BY_ZERO'); // Attempt<number, 'ERR_DIVIDE_BY_ZERO'>
+// assuming divide by zero is the only exception that might happen
+const resultSafeBetter = attempt.sync(() => divideUnsafe(10, 2))(e => 'ERR_DIVIDE_BY_ZERO'); // Attempt<number, 'ERR_DIVIDE_BY_ZERO'>
 
 const resultSafeEvenBetter = divideSafe(10, 2); // Attempt<number, 'ERR_DIVIDE_BY_ZERO'>
 
-// Do some operations the functional way
+// do some operations the functional way
 const output = resultSafeEvenBetter.pipe(
     attempt.map(a => `Success: ${a}`),
     attempt.unwrapOrElse(e => `Error: ${e}`)
