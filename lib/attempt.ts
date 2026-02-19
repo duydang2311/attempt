@@ -244,7 +244,7 @@ export const attempt = {
     mapError: attemptMapError,
     flatMapError: attemptFlatMapError,
     orElse: attemptFlatMapError,
-    uwnrap: attemptUnwrap,
+    unwrap: attemptUnwrap,
     unwrapOr: attemptUnwrapOr,
     unwrapOrElse: attemptUnwrapOrElse,
 } as const;
